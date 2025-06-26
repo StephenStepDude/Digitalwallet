@@ -1,0 +1,73 @@
+<div class="send-money-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Send Money</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="balance-info" *ngIf="currentUser">
+        <p>Available Balance: <span class="balance">${{currentUser.balance | number:'1.2-2'}}</span></p>
+      </div>
+
+      <form [formGroup]="sendMoneyForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Recipient Email</mat-label>
+          <input matInput placeholder="email@example.com" formControlName="recipientEmail">
+          <mat-error *ngIf="sendMoneyForm.get('recipientEmail')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="sendMoneyForm.get('recipientEmail')?.hasError('email')">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Amount</mat-label>
+          <span matPrefix>$ &nbsp;</span>
+          <input matInput type="number" placeholder="0.00" min="0.01" step="0.01" formControlName="amount">
+          <mat-error *ngIf="sendMoneyForm.get('amount')?.hasError('required')">
+            Amount is required
+          </mat-error>
+          <mat-error *ngIf="sendMoneyForm.get('amount')?.hasError('min')">
+            Amount must be greater than 0
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput placeholder="What's this for?" formControlName="description" rows="3"></textarea>
+          <mat-error *ngIf="sendMoneyForm.get('description')?.hasError('required')">
+            Description is required
+          </mat-error>
+        </mat-form-field>        <mat-form-field appearance="outline" class="full-width" *ngIf="paymentMethods.length > 0">
+          <mat-label>Payment Method</mat-label>
+          <mat-select formControlName="paymentMethodId">
+            <mat-option *ngFor="let method of paymentMethods" [value]="method.paymentMethodId">
+              Credit Card •••• {{method.cardNumber}} {{method.isDefault ? '(Default)' : ''}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="sendMoneyForm.get('paymentMethodId')?.hasError('required')">
+            Payment method is required
+          </mat-error>
+        </mat-form-field>
+        
+        <div *ngIf="paymentMethods.length === 0" class="no-payment-methods">
+          <p>You don't have any payment methods set up</p>
+          <a routerLink="/payment-methods" mat-button color="primary">Add Payment Method</a>
+        </div>
+        
+        <div class="form-actions">
+          <button mat-button type="button" routerLink="/dashboard">Cancel</button>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="sendMoneyForm.invalid || isLoading || paymentMethods.length === 0">
+            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+            <span *ngIf="!isLoading">Send Money</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

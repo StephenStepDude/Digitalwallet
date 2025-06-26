@@ -1,0 +1,70 @@
+.transactions-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.new-transaction-button {
+  float: right;
+}
+
+.filter-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-date {
+  width: 180px;
+}
+
+.mat-column-status {
+  width: 100px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.amount-sent {
+  color: #f44336;
+  font-weight: 500;
+}
+
+.amount-received {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.status-completed {
+  color: #4caf50;
+}
+
+.status-pending {
+  color: #ff9800;
+}
+
+.status-failed {
+  color: #f44336;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #757575;
+}
+
+@media (max-width: 768px) {
+  .mat-column-date {
+    width: 150px;
+  }
+}

@@ -1,0 +1,96 @@
+<div class="payment-methods-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        Payment Methods
+        <button mat-raised-button color="primary" (click)="toggleAddForm()" class="add-button">
+          <mat-icon>{{ showAddForm ? 'close' : 'add' }}</mat-icon>
+          {{ showAddForm ? 'Cancel' : 'Add Payment Method' }}
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <!-- Add New Payment Method Form -->
+      <div *ngIf="showAddForm" class="add-form">
+        <form [formGroup]="paymentForm" (ngSubmit)="submitPaymentMethod()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Card Number</mat-label>
+            <input matInput placeholder="1234 5678 9012 3456" formControlName="cardNumber" maxlength="16">
+            <mat-hint>16-digit card number without spaces</mat-hint>
+            <mat-error *ngIf="paymentForm.get('cardNumber')?.hasError('required')">Card number is required</mat-error>
+            <mat-error *ngIf="paymentForm.get('cardNumber')?.hasError('pattern')">Please enter a valid 16-digit card number</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Cardholder Name</mat-label>
+            <input matInput placeholder="John Doe" formControlName="cardholderName">
+            <mat-error *ngIf="paymentForm.get('cardholderName')?.hasError('required')">Cardholder name is required</mat-error>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Expiry Date</mat-label>
+              <input matInput placeholder="MM/YY" formControlName="expiryDate" maxlength="5">
+              <mat-hint>Format: MM/YY</mat-hint>
+              <mat-error *ngIf="paymentForm.get('expiryDate')?.hasError('required')">Expiry date is required</mat-error>
+              <mat-error *ngIf="paymentForm.get('expiryDate')?.hasError('pattern')">Please enter a valid expiry date (MM/YY)</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>CVV</mat-label>
+              <input matInput type="password" placeholder="123" formControlName="cvv" maxlength="4">
+              <mat-hint>3 or 4 digit security code</mat-hint>
+              <mat-error *ngIf="paymentForm.get('cvv')?.hasError('required')">CVV is required</mat-error>
+              <mat-error *ngIf="paymentForm.get('cvv')?.hasError('pattern')">Please enter a valid CVV</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-checkbox">
+            <mat-checkbox formControlName="setAsDefault">Set as default payment method</mat-checkbox>
+          </div>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="paymentForm.invalid || isLoading">
+              <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+              <span *ngIf="!isLoading">Add Payment Method</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Payment Methods List -->
+      <div class="loading-container" *ngIf="isLoading && !showAddForm">
+        <mat-spinner></mat-spinner>
+      </div>
+      
+      <div *ngIf="paymentMethods.length > 0 && !isLoading" class="payment-methods-list">
+        <div *ngFor="let method of paymentMethods" class="payment-method-item">
+          <div class="payment-method-info">
+            <div class="card-type">
+              <mat-icon>credit_card</mat-icon>
+              <span>{{ method.cardType }}</span>
+              <span class="default-badge" *ngIf="method.isDefault">Default</span>
+            </div>
+            <div class="card-number">•••• •••• •••• {{ method.cardNumber }}</div>
+            <div class="expiry">Expires: {{ method.expiryDate }}</div>
+          </div>
+            <div class="payment-method-actions">
+            <button mat-icon-button color="primary" [disabled]="method.isDefault" 
+                    (click)="setDefaultPaymentMethod(method.paymentMethodId)" title="Set as default">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deletePaymentMethod(method.paymentMethodId)" title="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="paymentMethods.length === 0 && !isLoading && !showAddForm" class="no-payment-methods">
+        <p>You don't have any payment methods set up yet.</p>
+        <button mat-raised-button color="primary" (click)="toggleAddForm()">Add Payment Method</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

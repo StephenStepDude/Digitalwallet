@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+.deposit-card {
+  width: 100%;
+  max-width: 500px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
